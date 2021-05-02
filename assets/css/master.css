@@ -6,8 +6,10 @@
   background-color: white;
 }
 
-main {
+body {
   background-color: lightgray;
+  width: 70%;
+  margin: 0 auto;
 }
 
 header .logo {
@@ -52,4 +54,7 @@ footer .right ul li {
 }
 footer .left img {
   height: 50%;
+}
+main .paragraph {
+  margin-bottom: 20px;
 }
