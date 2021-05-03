@@ -53,12 +53,38 @@
 						]
 					],
 					['onlyParagraph' => "Tieni presente che i servizi Google sono fondamentalmente gli stessi a prescindere dalla società consociata che li offre o dal paese a cui è associato il tuo account."],		
+					['paragraphWithSubtitle' => 
+						[
+							'title' => "Stabilire il paese associato al tuo account",
+							"paragraph" => [
+								"Quando crei un nuovo Account Google, lo associamo a un paese in base a dove è stato creato. Per quanto riguarda gli account creati almeno un anno fa, usiamo il paese da cui accedi solitamente ai servizi Google, in genere i servizi in cui hai trascorso più tempo nell'ultimo anno.",
+								"I viaggi frequenti solitamente non influiscono sul paese associato al tuo account. Se ti trasferisci in un altro paese, potrebbe occorrere circa un anno per aggiornare l'associazione del paese.",
+								"Se il paese associato al tuo account non corrisponde al tuo paese di residenza, il motivo potrebbe essere la differenza tra il paese in cui lavori e il paese in cui risiedi, l'installazione di una rete privata virtuale (VPN) per mascherare il tuo indirizzo IP oppure la residenza vicino a un confine territoriale. Contattaci se ritieni che il paese associato al tuo account sia sbagliato.",
+							],
+						],
+					],		
+				],
+			],
+		],
+		[
+			'questions' => "Come faccio a rimuovere informazioni su di me dai risultati di ricerca di Google?",
+			'answers' => [
+				'paragraph' => [
+					['onlyParagraph' => "I risultati di ricerca di Google rispecchiano i contenuti pubblicamente disponibili sul Web. I motori di ricerca non possono rimuovere i contenuti direttamente dai siti web, quindi rimuovere risultati di ricerca da Google non consente di rimuovere i contenuti dal Web. Se desideri rimuovere qualcosa dal Web, devi contattare il webmaster del sito su cui sono pubblicati i contenuti e chiedergli di apportare una modifica. Inoltre, se, ai sensi delle leggi europee per la protezione dei dati, desideri richiedere la rimozione di determinate informazioni su di te visualizzate nei risultati di ricerca di Google, fai clic qui. Una volta che i contenuti saranno stati rimossi e che Google avrà rilevato l'aggiornamento, le informazioni non verranno più visualizzate nei risultati di ricerca di Google. In caso di una richiesta di rimozione urgente, è inoltre possibile visitare la nostra pagina di assistenza per avere ulteriori informazioni."],
+				],
+			],
+		],
+		[
+			'questions' => "Quando faccio clic sui risultati della Ricerca Google, le mie chiavi di ricerca vengono inviate ai siti web?",
+			'answers' => [
+				'paragraph' => [
+					['onlyParagraph' => "In alcuni casi sì. Quando fai clic su un risultato della Ricerca Google, il tuo browser web potrebbe reindirizzare alla pagina web di destinazione anche l'indirizzo Internet, o URL, della pagina dei risultati di ricerca sotto forma di URL referrer. Talvolta, l'URL della pagina dei risultati di ricerca potrebbe contenere la query di ricerca che hai inserito. Se utilizzi la ricerca SSL (la funzione di ricerca criptata di Google), nella maggior parte dei casi i termini di ricerca non vengono inviati come parte dell'URL negli URL referrer. Questo comportamento può fare eccezione, ad esempio se utilizzi alcuni browser meno diffusi. Ulteriori informazioni sulla ricerca SSL sono disponibili qui. Le query di ricerca o le informazioni contenute nell'URL referrer potrebbero essere disponibili mediante Google Analytics o un'API (Application Programming Interface). Inoltre, gli inserzionisti potrebbero ricevere informazioni relative all' esatte parole chiave che hanno determinato il clic su un annuncio."],
 				],
 			],
 		],
 	];
-	
 	?>
+
 <body>
 	<header>
 		<div class="logo">
@@ -83,11 +109,6 @@
 			</ul>
 		</div>
 	</header>
-		<!-- 
-		'onlyParagraph' => "ha profonde conseguenze per i motori di ricerca in Europa",
-		'paragraphWithList' => "ha profonde conseguenze per i motori di ricerca in Europa",
-		'paragraphWithSubtitle' => "ha profonde conseguenze per i motori di ricerca in Europa",
-		 -->
 	<main>
 		<?php 
 		for ($i=0; $i < count($frequent_question); $i++) { 
@@ -102,44 +123,59 @@
 				<?php 
 					for ($j=0; $j < count($answers['paragraph']); $j++) { 
 						$paragraph = $answers['paragraph'][$j];
-				?>
-				<?= '<div class="paragraph onlyParagraph">' . $paragraph['onlyParagraph'] . '</div>' ?>
-				
-				<ol class="paragraph paragraphWithList">
-					<?php 
-						$paragraph['paragraphWithList'];
-						foreach ($paragraph['paragraphWithList'] as $isWithNestedList => $value) {
-						$paragraphWithList = $paragraph['paragraphWithList'];
-						$fromMainList = $paragraphWithList['withAnotherList']['fromMainList'];
-						$nestedList = $paragraphWithList['withAnotherList']['nestedList'];
-						$withoutAnotherList = $paragraphWithList['withoutAnotherList'];
-						//var_dump($isWithNestedList);
-					?>
-					<?php 
-						if ($isWithNestedList == "withAnotherList") {
-							echo "<li>";
-							echo "<div class='list'> . $fromMainList . </div>";
-							echo "<ol>";
-							for ($k=0; $k < count($nestedList); $k++) { 
-								$nestedListLi = $nestedList[$k];
-								echo "<li> . $nestedListLi . </li>";
+						foreach ($paragraph as $paragraphType => $value) {
+							if ($paragraphType == 'onlyParagraph') {
+								echo '<p class="paragraph onlyParagraph">' . $paragraph['onlyParagraph'] . '</p>';
 							}
-							echo "</ol></li>";
+							elseif ($paragraphType == 'paragraphWithList') {
+								echo '<ol class="paragraph paragraphWithList">';
+
+								foreach ($paragraph['paragraphWithList'] as $isWithNestedList => $value) {
+									$paragraphWithList = $paragraph['paragraphWithList'];
+									$fromMainList = $paragraphWithList['withAnotherList']['fromMainList'];
+									$nestedList = $paragraphWithList['withAnotherList']['nestedList'];
+									$withoutAnotherList = $paragraphWithList['withoutAnotherList'];
+
+									if ($isWithNestedList == "withAnotherList") {
+										echo "<li>";
+										echo "<div class='list'> . $fromMainList . </div>";
+										echo "<ol>";
+										for ($k=0; $k < count($nestedList); $k++) { 
+											$nestedListLi = $nestedList[$k];
+											echo "<li> . $nestedListLi . </li>";
+										}
+										echo "</ol></li>";
+									}
+
+									else {
+										echo '<li class="list">' . $withoutAnotherList . '</li>';
+									}
+								}
+								echo "</ol>";
+							}
+							elseif ($paragraphType == 'paragraphWithSubtitle') {
+								$subtitle = $paragraph['paragraphWithSubtitle']['title'];
+								$subparagraph = $paragraph['paragraphWithSubtitle']['paragraph'];
+
+								echo '<div class="subsection">';
+								echo '<h3 class="subtitle">';
+								echo $subtitle; // non me lo scriveva se messo in fila agli h3
+								echo '</h3>';
+
+								for ($k=0; $k < count($subparagraph); $k++) { 
+									echo "<p class='paragraph'>$subparagraph[$k]</p>";
+								}
+
+								echo '</div>';
+							}
 						}
-						else {
-							echo '<li class="list">' . $withoutAnotherList . '</li>';
-						}
-					?>
-					<?php } ?>
-				</ol>
-				<?php } ?>
+					}
+				?>
 			</div>
 
-
 		</div>
-		<?php	
-		}
-		?>
+		<?php } ?>
+
 	</main>
 	<footer>
 		<div class="right">
